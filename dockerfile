@@ -28,11 +28,11 @@ VOLUME /var/jenkins_home
 RUN curl -sSL https://get.docker.com | sh && sudo usermod -aG docker jenkins
 
 #download & install jenkins
+USER ${user}
 WORKDIR /opt/jenkins
 ADD http://mirrors.jenkins-ci.org/war/${jenkins_version}/jenkins.war /opt/jenkins.war
 
 ENV JENKINS_UC https://updates.jenkins.io
-RUN chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
 
 # for main web interface:
 EXPOSE 8080
@@ -40,5 +40,4 @@ EXPOSE 8080
 # will be used by attached slave agents:
 EXPOSE 50000
 
-USER ${user}
 ENTRYPOINT ["java", "-jar", "/opt/jenkins.war"]
