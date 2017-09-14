@@ -28,7 +28,6 @@ VOLUME /var/jenkins_home
 RUN curl -sSL https://get.docker.com | sh && sudo usermod -aG docker jenkins
 
 #download & install jenkins
-USER ${user}
 WORKDIR /opt/jenkins
 ADD http://mirrors.jenkins-ci.org/war/${jenkins_version}/jenkins.war /opt/jenkins.war
 RUN chmod 644 /opt/jenkins.war
@@ -40,5 +39,5 @@ EXPOSE 8080
 
 # will be used by attached slave agents:
 EXPOSE 50000
-
+USER ${user}
 ENTRYPOINT ["java", "-jar", "/opt/jenkins.war"]
