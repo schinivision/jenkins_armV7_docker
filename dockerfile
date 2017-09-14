@@ -31,6 +31,7 @@ RUN curl -sSL https://get.docker.com | sh && sudo usermod -aG docker jenkins
 USER ${user}
 WORKDIR /opt/jenkins
 ADD http://mirrors.jenkins-ci.org/war/${jenkins_version}/jenkins.war /opt/jenkins.war
+RUN chmod 644 /opt/jenkins.war
 
 ENV JENKINS_UC https://updates.jenkins.io
 
