@@ -8,6 +8,7 @@ RUN apt-get update \
 ENV JENKINS_HOME /var/jenkins_home
 ENV JENKINS_SLAVE_AGENT_PORT 50000
 
+ARG jenkins_version=2.77
 ARG user=jenkins
 ARG group=jenkins
 ARG uid=1000
@@ -24,4 +25,20 @@ RUN groupadd -g ${gid} ${group} \
 VOLUME /var/jenkins_home
 
 #install docker support before installing jenkins
-RUN curl -sSL https://get.docker.com | sh
+RUN curl -sSL https://get.docker.com | sh && sudo usermod -aG docker jenkins
+
+#download & install jenkins
+WORKDIR /opt/jenkins
+ADD http://mirrors.jenkins-ci.org/war/${jenkins_version}/jenkins.war /opt/jenkins.war
+
+ENV JENKINS_UC https://updates.jenkins.io
+RUN chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
+
+# for main web interface:
+EXPOSE 8080
+
+# will be used by attached slave agents:
+EXPOSE 50000
+
+USER ${user}
+ENTRYPOINT ["java", "-jar", "/opt/jenkins.war"]
